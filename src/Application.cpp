@@ -74,6 +74,10 @@ void Application::run() {
     // timing
     float deltaTime = 0.0f;	// time between current frame and last frame
     float lastFrame = 0.0f;
+    std::string filePath = "assets\\Scalar\\";
+    VolumeData test(filePath, "engine.inf");
+
+    return;
     while(!m_window->shouldClose()) {
         // per-frame time logic
         // --------------------
