@@ -15,7 +15,8 @@ std::string const InfoKey::Endian = "endian";
 struct kAlias static const key_alias;
 struct InfoKey static const key;
 
-VolumeData::VolumeData(std::string const &filePath, std::string const &infFile) {
+VolumeData::VolumeData(std::string const &filePath, std::string const &infFile) 
+    :resolution(0), ratio(0) {
     info[key.Inf] = infFile;
     info["path"] = filePath;
 
@@ -29,7 +30,6 @@ VolumeData::VolumeData(std::string const &filePath, std::string const &infFile) 
     std::string line;
     while(std::getline(infIn, line)) {
         std::vector<std::string> words = strUtil::split(line, "=");
-        // // std::vector<std::string> delimiters({":", "x"});
         
         if (key_alias.Raw.count(words[0])) {
             info[key.Raw] = words[1];
@@ -64,4 +64,45 @@ VolumeData::VolumeData(std::string const &filePath, std::string const &infFile) 
         auto fileInfo = strUtil::split(infFile, ".");
         info[key.Raw] = fileInfo[0] + ".raw";
     }
+    infIn.close();
+}
+
+void VolumeData::Read() {
+    std::vector<std::string> delimiters({":", "x"});
+    std::vector<std::string> strRes;
+    for(int i = 0; i < delimiters.size(); ++i) {
+        strRes = strUtil::split(info[key.Resolution], delimiters[i]);
+        if(strRes.size() != 1)  break;
+        strRes.clear();
+    }
+    for(int i = 0; i < strRes.size(); ++i) {
+        resolution[i] = std::stoi(strRes[i]);
+    }
+
+    std::vector<std::string> strVsize;
+    for(int i = 0; i < delimiters.size(); ++i) {
+        strVsize = strUtil::split(info[key.VolumeSize], delimiters[i]);
+        if(strRes.size() != 1)  break;
+        strVsize.clear();
+    }
+    for(int i = 0; i < strVsize.size(); ++i) {
+        ratio[i] = std::stof(strVsize[i]);
+    }
+    
+    std::ifstream rawIn(info["path"] + info[key.Raw], std::ios::binary);
+    if (!rawIn) {
+        std::cout << "fail in opening " << info[key.Raw] << " for reading.\n";
+        exit(1);
+    }
+
+    if(info[key.vDataType] == "unsignedchar") {
+        assert(resolution.x > 0 && resolution.y > 0 && resolution.z > 0);
+        std::vector<uint8_t> buffer(resolution.x * resolution.y * resolution.z, 0);
+        rawIn.read(reinterpret_cast<char *>(buffer.data()), buffer.size());
+        scalar_field.assign(buffer.begin(), buffer.end());
+    } else {
+        std::cerr << "not supported\n";
+        exit(1);
+    }
+    rawIn.close();
 }

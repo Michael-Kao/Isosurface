@@ -76,7 +76,7 @@ void Application::run() {
     float lastFrame = 0.0f;
     std::string filePath = "assets\\Scalar\\";
     VolumeData test(filePath, "engine.inf");
-
+    test.Read();
     return;
     while(!m_window->shouldClose()) {
         // per-frame time logic
