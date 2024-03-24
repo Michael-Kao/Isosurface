@@ -75,9 +75,8 @@ void Application::run() {
     float deltaTime = 0.0f;	// time between current frame and last frame
     float lastFrame = 0.0f;
     std::string filePath = "assets\\Scalar\\";
-    Isosurface test(filePath, "engine.inf", 80);
-    test.MarchingCube();
-    return;
+    Model model(filePath, "engine.inf", 80);
+    std::cout << "done\n";
     while(!m_window->shouldClose()) {
         // per-frame time logic
         // --------------------
@@ -93,19 +92,21 @@ void Application::run() {
         processInput();
 
         glViewport(0, 0, m_window->getWidth(), m_window->getHeight());
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        drawTest();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        // glViewport(0, 0, m_window->getWidth() / 2, m_window->getHeight() / 2);
-        // drawTest();
-        // glViewport(m_window->getWidth() / 2, m_window->getHeight() / 2, m_window->getWidth() / 2, m_window->getHeight() / 2);
         // drawTest();
         // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        // glViewport(m_window->getWidth() / 2, 0, m_window->getWidth() / 2, m_window->getHeight() / 2);
-        // drawTest();
-        // glViewport(0, m_window->getHeight() / 2, m_window->getWidth() / 2, m_window->getHeight() / 2);
-        // drawTest();
+
+        m_camera->width = m_window->getWidth();
+        m_camera->height = m_window->getHeight();
+        m_camera->center = model.center;
+        m_shader->bind();
+        m_shader->setVec3("light_color", {1.f, 1.f, 1.f});
+        m_shader->setVec3("model_color", {0.f, 0.5f, 1.f});
+        m_shader->setMat4("view_proj_matrix", m_camera->ViewProjectionMatrix());
+        m_shader->setVec3("light_src", m_camera->Position);
+        m_shader->setVec3("light_pos", m_camera->Position);
+        model.draw();
+
         m_window->swapBuffers();
     }
 }

@@ -3,6 +3,9 @@
 Isosurface::Isosurface(std::string const &filePath, std::string const &infFile, unsigned int isovalue)
     : m_data(filePath, infFile), isovalue(isovalue) {
     m_data.Read();
+    center.x = m_data.resolution.x * m_data.ratio.x * 0.5f;
+    center.y = m_data.resolution.y * m_data.ratio.y * 0.5f;
+    center.z = m_data.resolution.z * m_data.ratio.z * 0.5f;
 }
 
 void Isosurface::CalcGradient() {
