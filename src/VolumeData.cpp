@@ -106,3 +106,13 @@ void VolumeData::Read() {
     }
     rawIn.close();
 }
+
+float VolumeData::Value(int x, int y, int z) {
+    int idx = x + y * resolution.x + z * resolution.x * resolution.y;
+    return scalar_field[idx];
+}
+
+float VolumeData::Value(glm::ivec3 coordinate) {
+    int idx = coordinate.x + coordinate.y * resolution.x + coordinate.z * resolution.x * resolution.y;
+    return scalar_field[idx];
+}

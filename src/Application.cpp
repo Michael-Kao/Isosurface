@@ -75,8 +75,8 @@ void Application::run() {
     float deltaTime = 0.0f;	// time between current frame and last frame
     float lastFrame = 0.0f;
     std::string filePath = "assets\\Scalar\\";
-    VolumeData test(filePath, "engine.inf");
-    test.Read();
+    Isosurface test(filePath, "engine.inf", 80);
+    test.MarchingCube();
     return;
     while(!m_window->shouldClose()) {
         // per-frame time logic
