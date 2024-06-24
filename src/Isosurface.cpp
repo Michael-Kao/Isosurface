@@ -43,7 +43,7 @@ void Isosurface::CalcGradient() {
                     zDiff = CentralDifference(m_data.Value(x, y, z - 1), m_data.Value(x, y, z + 1));
                 }
 
-                if(xDiff == 0 && yDiff == 0 && zDiff == 1) {
+                if(xDiff == 0 && yDiff == 0 && zDiff == 0) {
                     gradients.push_back({0.f, 0.f, 0.f});
                 } else {
                     gradients.push_back(glm::normalize(glm::vec3{xDiff, yDiff, zDiff}));

@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera()
-    : Position(glm::vec3(0.0f, 0.0f, 10.0f)), Front({0, 0, -1}), WorldUp({0, 1, 0}), Pitch(0), Yaw(-90.0f), fov(90.0f), width(0), height(0)
+    : Position(glm::vec3(0.0f, 0.0f, 10.0f)), Front({0, 0, -1}), WorldUp({0, 1, 0}), Pitch(0), Yaw(-90.0f), fov(45.0f), width(0), height(0)
 {
     updateVector();
 }
@@ -68,7 +68,7 @@ glm::mat4 Camera::ViewProjectionMatrix() {
     // float v = 200 * (1.0 * width / height) * 0.8;
     // float h = 200 * 0.8;
     // return glm::ortho(-v, v, -h, h, 0.f, 1000.f) * view;
-    glm::mat4 proj = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.f, 1000.f);
+    glm::mat4 proj = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 10000.f);
     glm::mat4 res = proj * view;
     return res;
 }
